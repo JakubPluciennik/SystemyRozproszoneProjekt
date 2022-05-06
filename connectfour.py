@@ -43,9 +43,7 @@ def sprawdz_kolumne(plansza,numer_kolumny):
     licznik = 0;
     czy_poprzednio_X = True #5
     for indeks in range(6):
-        if(licznik == 4):
-            print("Wygrana kolumnowa")
-            return True
+        
         
         if(plansza[indeks,int(numer_kolumny)]==5 and czy_poprzednio_X):
             licznik+=1
@@ -58,15 +56,18 @@ def sprawdz_kolumne(plansza,numer_kolumny):
                  licznik = 1
             else:
                 licznik +=1
+        else:
+            licznik =0
+    
+        if(licznik == 4):
+            print("Wygrana kolumnowa")
+            return True
     return False
 
 def sprawdz_wiersz(plansza,numer_wiersza):
     licznik = 0;
     czy_poprzednio_X = True #5
     for indeks in range(7):
-        if(licznik == 4):
-            print("Wygrana wierszowa")
-            return True
         
         if(plansza[int(numer_wiersza),indeks]==5 and czy_poprzednio_X):
             licznik+=1
@@ -79,7 +80,13 @@ def sprawdz_wiersz(plansza,numer_wiersza):
                 licznik = 1
             else:
                 licznik +=1
-            
+        else:
+            licznik =0
+    
+        if(licznik == 4):
+            print("Wygrana wierszowa")
+            return True
+        
     return False
 
 def sprawdz_skos(plansza,numer_kolumny,numer_wiersza):
@@ -133,6 +140,4 @@ while(True): #Pętla gry
     else:
         czy_gracz_jeden = True
     
-    
-
-
+ 

@@ -36,7 +36,7 @@ def wypisz_plansze(plansza):
     return
 
 def czy_gracz_wygral(plansza, numer_kolumny,numer_wiersza):
-    result = sprawdz_kolumne(plansza, numer_kolumny) or sprawdz_wiersz(plansza,numer_wiersza)
+    result = sprawdz_kolumne(plansza, numer_kolumny) or sprawdz_wiersz(plansza,numer_wiersza) or sprawdz_skos1(plansza,numer_kolumny,numer_wiersza) or sprawdz_skos2(plansza,numer_kolumny,numer_wiersza)
     return result
 
 def sprawdz_kolumne(plansza,numer_kolumny):
@@ -89,11 +89,29 @@ def sprawdz_wiersz(plansza,numer_wiersza):
         
     return False
 
-def sprawdz_skos(plansza,numer_kolumny,numer_wiersza):
-    
-    
-    
-    return False
+def sprawdz_skos1(plansza,numer_kolumny,numer_wiersza):
+    B = int(numer_wiersza) - int(numer_kolumny)   
+    napis=""
+    for i in range(7):
+        y = i + B
+        if(y<0 or y > 5):
+            continue
+        napis +=str(plansza[y,i])+" "
+    wynik = ("5.0 5.0 5.0 5.0" in napis) or ("7.0 7.0 7.0 7.0" in napis)
+        
+    return wynik
+
+def sprawdz_skos2(plansza,numer_kolumny,numer_wiersza):
+    B = int(numer_wiersza) + int(numer_kolumny)   
+    napis=""
+    for i in range(7):
+        y = -i + B
+        if(y<0 or y > 5):
+            continue
+        napis +=str(plansza[y,i])+" "
+    wynik = ("5.0 5.0 5.0 5.0" in napis) or ("7.0 7.0 7.0 7.0" in napis)
+        
+    return wynik
 
 
 
@@ -140,4 +158,6 @@ while(True): #Pętla gry
     else:
         czy_gracz_jeden = True
     
- 
+    
+
+

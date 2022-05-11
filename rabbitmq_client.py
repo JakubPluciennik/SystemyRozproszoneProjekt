@@ -1,11 +1,17 @@
 from pika import BlockingConnection, ConnectionParameters
+import json
 
-global opcja
+
 def callback(ch, method, properties, body):
     msg = body.decode()
-    print(f"Received: {msg}")
-    if(msg != opcja):
-        return
+    gameState = json.loads(msg)
+
+    #print(f"Received: {msg}")
+    print(gameState['planszaCon'])
+    player = '1' if gameState['gracz_1'] else '2'
+
+    #if(player != opcja):
+    #    return
 
     while True:
         try:
@@ -13,34 +19,45 @@ def callback(ch, method, properties, body):
         except Exception as e:
             print("Nieprawidlowe dane")
             continue
-
         if(message >= 0 and message <= 6):
             break
         print("Nieprawidłowy wiersz!")
+
     message = str(message)
-    channel_send.basic_publish(exchange="client_message",
-                               routing_key="",
-                               body=message)
+    channel.basic_publish(exchange="client_message",
+                          routing_key="",
+                          body=message)
     print(f"Sending: {message}")
 
-#-----------------------------------------------------------------------
+# -----------------------------------------------------------------------
 
-opcja = input("Wybierz opcje (1, 2): ")
+
+print('Witaj w grze kółko i krzyżyk!')
+opcja = input("Wybierz opcje (1,2): ")
 connection = BlockingConnection(ConnectionParameters(host="localhost"))
+q_name_1 = "queue1"
+q_name_2 = "queue2"
 channel = connection.channel()
+
+# --- konfiguracja kanału odbierającego ---
 channel.exchange_declare(exchange="server_message",
-                         exchange_type="fanout",
-                          auto_delete=True)
-result = channel.queue_declare(queue="", exclusive=True)
-q_name = result.method.queue
-channel.queue_bind(exchange="server_message", queue=q_name)
+                         exchange_type="fanout")
+result = channel.queue_declare(queue=q_name_1,
+                               durable=True)
+channel.queue_bind(exchange="server_message", queue=q_name_1)
+# -----------------------------------------
 
-channel_send = connection.channel()
-channel_send.exchange_declare(exchange="client_message",
-                              exchange_type="fanout",
-                              auto_delete=True)
+# --- konfiguracja kanału wysyłającego ---
+channel.exchange_declare(exchange="client_message",
+                         exchange_type="fanout")
+result = channel.queue_declare(queue=q_name_2,
+                               durable=True)
+channel.queue_bind(exchange="client_message",
+                   queue=q_name_2)
+# ----------------------------------------
 
-channel.basic_consume(queue=q_name,
+# Odbieranie wiadomości
+channel.basic_consume(queue=q_name_1,
                       on_message_callback=callback,
                       auto_ack=True)
 channel.start_consuming()

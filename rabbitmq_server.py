@@ -9,6 +9,7 @@ def callback(ch, method, properties, body):
     print(f"Received: {msg}")
     ch.stop_consuming()  # Zatrzymaj odbieranie wiadomości
 
+
 def server_message(json_data):  # Wysyłanie wiadomości do klienta i odbieranie odpowiedzi
     message = json_data
     print(f"Sending: {message}")
@@ -20,30 +21,30 @@ def server_message(json_data):  # Wysyłanie wiadomości do klienta i odbieranie
 
     # --- konfiguracja kanału wysyłającego ---
     channel.exchange_declare(exchange="server_message",
-                                  exchange_type="fanout")
+                             exchange_type="fanout")
     result_send = channel.queue_declare(queue=q_name_send,
-                                             durable=True)
+                                        durable=True)
     channel.queue_bind(exchange="server_message",
-                            queue=q_name_send)
+                       queue=q_name_send)
     # ----------------------------------------
     # Wysyłanie wiadomości
     channel.basic_publish(exchange="server_message",
-                               routing_key="",
-                               body=message)
+                          routing_key="",
+                          body=message)
 
     # --- konfiguracja kanału odbierającego ---
     channel.exchange_declare(exchange="client_message",
-                                     exchange_type="fanout")
+                             exchange_type="fanout")
     result_receive = channel.queue_declare(queue=q_name_receive,
-                                                   durable=True)
+                                           durable=True)
     channel.queue_bind(exchange="client_message",
-                               queue=q_name_receive)
+                       queue=q_name_receive)
     # -----------------------------------------
 
     # Odbieranie wiadomości
     channel.basic_consume(queue=q_name_receive,
-                                  on_message_callback=callback,
-                                  auto_ack=True)
+                          on_message_callback=callback,
+                          auto_ack=True)
     channel.start_consuming()
     channel.close()
     connection.close()

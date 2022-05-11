@@ -5,12 +5,18 @@ import json
 def callback(ch, method, properties, body):
     msg = body.decode()
     gameState = json.loads(msg)
-
     #print(f"Received: {msg}")
     print(gameState['planszaCon'])
     player = '1' if gameState['gracz_1'] else '2'
 
-    #if(player != opcja):
+    if gameState['wygrana'] == True:
+        print(gameState['kto_wygral'])
+        ch.basic_publish(exchange="client_message",
+                         routing_key="",
+                         body='END')
+        ch.stop_consuming()
+        return
+    # if(player != opcja):
     #    return
 
     while True:

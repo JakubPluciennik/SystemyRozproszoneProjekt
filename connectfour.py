@@ -6,9 +6,11 @@ from rabbitmq_server import server_message
 
 
 class ConnectFour:
-    def __init__(self, gracz_1, planszaCon):
+    def __init__(self, gracz_1, planszaCon, wygrana, kto_wygral):
         self.gracz_1 = gracz_1
         self.planszaCon = planszaCon
+        self.wygrana = wygrana
+        self.kto_wygral = kto_wygral
 
 
 def wstaw_do_planszy(numer_kolumny, plansza, pomocniczaTablica, czy_gracz_jeden):
@@ -160,7 +162,7 @@ while(True):  # Pętla gry
     """
     # Wysłanie stanu gry do klienta, zwracany indeks kolumny
     planszaCon = wypisz_plansze(plansza)
-    gameState = ConnectFour(czy_gracz_jeden, planszaCon)
+    gameState = ConnectFour(czy_gracz_jeden, planszaCon, False, "")
     json_gameState = json.dumps(gameState.__dict__)
 
     # kolumna = input()   #Wprowadzenie kolumny
@@ -181,12 +183,17 @@ while(True):  # Pętla gry
 
     numer_wiersza = pomocniczaTablica[int(kolumna)] + 1
     if(czy_gracz_wygral(plansza, kolumna, numer_wiersza)):
+        gameState = ConnectFour(czy_gracz_jeden, planszaCon, True, "")
         print("KONIEC GRY")
+        print(planszaCon)
         if(czy_gracz_jeden):
             print("Wygrał gracz X")
+            gameState.kto_wygral = "Wygrał gracz X"
         else:
             print("Wygrał gracz O")
-        wypisz_plansze(plansza)
+            gameState.kto_wygral = "Wygrał gracz O"
+        json_gameState = json.dumps(gameState.__dict__)
+        server_message(json_gameState)
         break
 
     if(czy_gracz_jeden):  # Zamiana gracza

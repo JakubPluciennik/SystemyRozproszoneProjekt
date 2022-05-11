@@ -6,8 +6,18 @@ def callback(ch, method, properties, body):
     print(f"Received: {msg}")
     if(msg != opcja):
         return
-    message = input()
 
+    while True:
+        try:
+            message = int(input("Podaj wiersz: (0-6):"))
+        except Exception as e:
+            print("Nieprawidlowe dane")
+            continue
+
+        if(message >= 0 and message <= 6):
+            break
+        print("Nieprawidłowy wiersz!")
+    message = str(message)
     channel_send.basic_publish(exchange="client_message",
                                routing_key="",
                                body=message)

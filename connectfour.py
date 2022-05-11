@@ -136,6 +136,8 @@ def sprawdz_skos2(plansza, numer_kolumny, numer_wiersza):
 
     return wynik
 
+# Zaczęcie rundy po dołączeniu graczy
+input("Wciśnij dowolny klawisz aby rozpocząć grę")
 
 plansza = np.zeros((6, 7))  # inicjalizacja planszy
 

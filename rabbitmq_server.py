@@ -12,8 +12,7 @@ def callback(ch, method, properties, body):
 
 def server_message(json_data):  # Wysyłanie wiadomości do klienta i odbieranie odpowiedzi
     message = json_data
-    print(f"Sending: {message}")
-
+    
     connection = BlockingConnection(ConnectionParameters(host="localhost"))
     q_name_send = "queue1"
     q_name_receive = "queue2"
@@ -22,16 +21,19 @@ def server_message(json_data):  # Wysyłanie wiadomości do klienta i odbieranie
     # --- konfiguracja kanału wysyłającego ---
     channel.exchange_declare(exchange="server_message",
                              exchange_type="fanout")
+    """"
     result_send = channel.queue_declare(queue=q_name_send,
                                         durable=True)
     channel.queue_bind(exchange="server_message",
                        queue=q_name_send)
+    """
     # ----------------------------------------
     # Wysyłanie wiadomości
     channel.basic_publish(exchange="server_message",
                           routing_key="",
                           body=message)
-
+    print(f"Sending: {message}")
+    
     # --- konfiguracja kanału odbierającego ---
     channel.exchange_declare(exchange="client_message",
                              exchange_type="fanout")

@@ -5,9 +5,15 @@ import json
 def callback(ch, method, properties, body):
     msg = body.decode()
     gameState = json.loads(msg)
-    #print(f"Received: {msg}")
+    # print(f"Received: {msg}")
+    
+    if opcja == '1':
+        print('Gracz X')
+    elif opcja == '2':
+        print('Gracz O')
+
     print(gameState['planszaCon'])
-    player = '1' if gameState['gracz_1'] else '2'
+    player = '1' if gameState['gracz_1'] else '2'\
 
     if gameState['wygrana'] == True:
         print(gameState['kto_wygral'])
@@ -16,8 +22,8 @@ def callback(ch, method, properties, body):
                          body='END')
         ch.stop_consuming()
         return
-    # if(player != opcja):
-    #    return
+    if(player != opcja):
+        return
 
     while True:
         try:
@@ -48,9 +54,11 @@ channel = connection.channel()
 # --- konfiguracja kanału odbierającego ---
 channel.exchange_declare(exchange="server_message",
                          exchange_type="fanout")
-result = channel.queue_declare(queue=q_name_1,
+result = channel.queue_declare(queue="",
+                               exclusive=True,
                                durable=True)
-channel.queue_bind(exchange="server_message", queue=q_name_1)
+q_name = result.method.queue
+channel.queue_bind(exchange="server_message", queue=q_name)
 # -----------------------------------------
 
 # --- konfiguracja kanału wysyłającego ---
@@ -63,7 +71,7 @@ channel.queue_bind(exchange="client_message",
 # ----------------------------------------
 
 # Odbieranie wiadomości
-channel.basic_consume(queue=q_name_1,
+channel.basic_consume(queue=q_name,
                       on_message_callback=callback,
                       auto_ack=True)
 channel.start_consuming()

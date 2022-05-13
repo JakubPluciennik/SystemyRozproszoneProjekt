@@ -10,36 +10,42 @@ def callback(ch, method, properties, body):
     ch.stop_consuming()  # Zatrzymaj odbieranie wiadomości
 
 
-def server_message(json_data):  # Wysyłanie wiadomości do klienta i odbieranie odpowiedzi
+def server_message(json_data, id):  # Wysyłanie wiadomości do klienta i odbieranie odpowiedzi
     message = json_data
-    
+
     connection = BlockingConnection(ConnectionParameters(host="localhost"))
-    q_name_send = "queue1"
-    q_name_receive = "queue2"
+    q_name_send = "queue1." + id
+    q_name_receive = "queue2." + id
     channel = connection.channel()
 
     # --- konfiguracja kanału wysyłającego ---
-    channel.exchange_declare(exchange="server_message",
-                             exchange_type="fanout")
-    """"
+    channel.exchange_declare(exchange="server_message."+id,
+                             exchange_type="fanout",
+                             durable=True,
+                             auto_delete=True)
+    """
     result_send = channel.queue_declare(queue=q_name_send,
-                                        durable=True)
-    channel.queue_bind(exchange="server_message",
+                                        durable=True,
+                                        )
+    channel.queue_bind(exchange="server_message."+id,
                        queue=q_name_send)
     """
     # ----------------------------------------
     # Wysyłanie wiadomości
-    channel.basic_publish(exchange="server_message",
+    channel.basic_publish(exchange="server_message."+id,
                           routing_key="",
                           body=message)
-    print(f"Sending: {message}")
-    
+    print(f"Sending to: {id}")
+
     # --- konfiguracja kanału odbierającego ---
-    channel.exchange_declare(exchange="client_message",
-                             exchange_type="fanout")
+    channel.exchange_declare(exchange="client_message."+id,
+                             exchange_type="fanout",
+                             durable=True,
+                             auto_delete=True)
     result_receive = channel.queue_declare(queue=q_name_receive,
-                                           durable=True)
-    channel.queue_bind(exchange="client_message",
+                                           durable=True,
+                                           arguments={"x-expires": 60*60*1000})
+    channel.queue_bind(exchange="client_message."+id,
                        queue=q_name_receive)
     # -----------------------------------------
 

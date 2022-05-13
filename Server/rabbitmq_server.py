@@ -1,7 +1,6 @@
 from email import message
 from pika import BlockingConnection, ConnectionParameters
 
-
 def callback(ch, method, properties, body):
     msg = body.decode()
     global message_global

@@ -3,6 +3,7 @@
 import numpy as np
 import json
 from rabbitmq_server import server_message
+from time import sleep
 
 class ConnectFour:
     def __init__(self, gracz_1, planszaCon, wygrana, kto_wygral, plansza):
@@ -131,9 +132,8 @@ def sprawdz_skos2(plansza, numer_kolumny, numer_wiersza):
 
 def gameLoop(id):
     # Zaczęcie rundy po dołączeniu graczy
-
+    sleep(1)    # Czekanie 1 sekundy na dołączenie graczy
     plansza = np.zeros((6, 7))  # inicjalizacja planszy
-
     pomocniczaTablica = 5*np.ones(7)  # tabel pomocnicza
 
     # Testowanie

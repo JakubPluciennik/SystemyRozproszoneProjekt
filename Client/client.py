@@ -80,10 +80,8 @@ while stan:
     match opcja:
         case '1':
             graczX()
-            break
         case '2':
             graczO()
-            break
         case '0':
             print('Wybrałeś opcję 0, zakończenie działania programu')
             stan = False

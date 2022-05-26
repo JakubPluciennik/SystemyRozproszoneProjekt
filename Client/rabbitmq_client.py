@@ -56,7 +56,7 @@ def client_loop(id, gracz):
     opcja = str(gracz)
 
     host = "localhost"    # Hostname
-    connection = BlockingConnection(ConnectionParameters(host))
+    connection = BlockingConnection(ConnectionParameters(host,heartbeat=0))
     channel = connection.channel()
 
     #q_name_1 = 'queue1.' + id

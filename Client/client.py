@@ -59,7 +59,7 @@ stan = True
 while stan:
     stan = not stan
     host = "localhost"    # Hostname
-    connection = BlockingConnection(ConnectionParameters(host))
+    connection = BlockingConnection(ConnectionParameters(host,heartbeat=0))
     channel = connection.channel()
     q_name = "main_queue"
     # --- konfiguracja kanału odbierającego ---

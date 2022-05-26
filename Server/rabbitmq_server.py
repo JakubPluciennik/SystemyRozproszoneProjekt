@@ -1,6 +1,7 @@
 from email import message
 from pika import BlockingConnection, ConnectionParameters
 
+
 def callback(ch, method, properties, body):
     msg = body.decode()
     global message_global
@@ -12,7 +13,7 @@ def callback(ch, method, properties, body):
 def server_message(json_data, id):  # Wysyłanie wiadomości do klienta i odbieranie odpowiedzi
     message = json_data
 
-    connection = BlockingConnection(ConnectionParameters(host="localhost"))
+    connection = BlockingConnection(ConnectionParameters(host="localhost",heartbeat=0))
     q_name_send = "queue1." + id
     q_name_receive = "queue2." + id
     channel = connection.channel()

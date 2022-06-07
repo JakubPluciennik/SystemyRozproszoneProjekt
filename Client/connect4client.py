@@ -12,19 +12,21 @@ from random import randint
 ROW_COUNT = 6
 COLUMN_COUNT = 7
 
-SQUARE_SIZE = 100
-
 # kolory
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
+WHITE = (255, 255, 255)
+
+SQUARE_SIZE = 100
 
 # dane do wyznaczenia rozmiaru okna
 width = COLUMN_COUNT * SQUARE_SIZE
 height = (ROW_COUNT+1) * SQUARE_SIZE
 size = (width, height) # okno 700x700
-# screenOfGame = pygame.display.set_mode(size) # nie wiem czy komentowanie tego coś zmieni !!!!!!!
+
+
 RADIUS = int(SQUARE_SIZE/2 - 5)
 
 def draw_board(board, screen): 
@@ -45,13 +47,11 @@ def draw_board(board, screen):
 
 
 def callback(ch, method, properties, body, screen):
-    # pygame.time.wait(500) # 0.5 s
     msg = body.decode()
     gameState = json.loads(msg)
     pygame.display.set_caption("Connect4")
     screen.fill("black")
-    # na razie test czy while jest w ogóle potrzebny
-    #while True: 
+    
     # wyrysowanie planszy i aktualnego stanu gry
     draw_board(gameState['plansza'], screen)
     pygame.display.update()
@@ -59,18 +59,15 @@ def callback(ch, method, properties, body, screen):
 
     # wygrana określa zakończenie gry -> wygrana jednego z graczy albo remis
     if gameState['wygrana'] == True: 
-        # print(gameState['kto_wygral']) # może być wygrana, przegrana, remis -> osobny widok z przyciskiem do menu głównego
         message = "END"
         ch.basic_publish(exchange="client_message."+session_id,
                         routing_key="",
                         body=message)
-        # print(f"Sending: end message")
         ch.stop_consuming()
         wynikGry_menu(str(gameState['kto_wygral']), ktoGraNaTymKompie=opcja) # przejście do pokazania wyniku gry
-        # tutaj teraz należało by przejść do wyświetlenia komunikatu o stanie gry z którego jest opcja powrotu do menu głównego !!!!!!!!!
     else: 
         if(player != opcja):
-        # w tym momencie gracz nie może wykonać ruchu (np. graczowi nie pokazuje się piłeczka)
+            # w tym momencie gracz nie może wykonać ruchu (np. graczowi nie pokazuje się piłeczka)
             return
         
         # obsługa ruchu gracza
@@ -114,7 +111,6 @@ def callback(ch, method, properties, body, screen):
 def client_loop(id, gracz, screen):
     screen.fill("black")
     
-    screenOfGame = screen
     pygame.display.update()
 
 
@@ -128,7 +124,7 @@ def client_loop(id, gracz, screen):
     connection = BlockingConnection(ConnectionParameters(host,heartbeat=0))
     channel = connection.channel()
 
-    #q_name_1 = 'queue1.' + id
+    
     q_name_2 = 'queue2.' + id
     # --- konfiguracja kanału odbierającego ---
     channel.exchange_declare(exchange="server_message." + id,
@@ -163,26 +159,8 @@ def client_loop(id, gracz, screen):
     channel.start_consuming()
     connection.close()
 
-ROW_COUNT = 6
-COLUMN_COUNT = 7
 
-# kolory
-BLUE = (0, 0, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-YELLOW = (255, 255, 0)
-WHITE = (255, 255, 255)
-
-SQUARE_SIZE = 100
-
-# dane do wyznaczenia rozmiaru okna
-width = COLUMN_COUNT * SQUARE_SIZE
-height = (ROW_COUNT+1) * SQUARE_SIZE
-size = (width, height) # okno 700x700
-
-
-RADIUS = int(SQUARE_SIZE/2 - 5)
-
+# włączenie pygame
 pygame.init()
 SCREEN = pygame.display.set_mode(size)
 pygame.display.set_caption("Menu")
@@ -195,7 +173,7 @@ def wynikGry_menu(ktoWygral : str, ktoGraNaTymKompie : str):
     pygame.display.set_caption("Menu - Utwórz sesję")
     
     while True: 
-        SCREEN.fill("blue") # czarne tło   
+        SCREEN.fill("blue") # niebieskie tło   
         MENU_MOUSE_POS = pygame.mouse.get_pos() 
         # potencjalne napisy do wyświetlenia -> wyświetlony zostanie tylko jeden zależnie od wyniku gry
         WYGRANA_TEXT = get_font(80).render("Wygrałeś!", True, "#00ff00") # na zielono
@@ -245,7 +223,7 @@ def wynikGry_menu(ktoWygral : str, ktoGraNaTymKompie : str):
         pygame.display.update()
     
 
-# ta funkcja odpowiada jakby funkcji graczX z client.py
+
 def utworzSesje_menu(): 
     pygame.display.set_caption("Menu - Utwórz sesję")
     id = randint(1000, 9999) # numer sesji
@@ -257,11 +235,6 @@ def utworzSesje_menu():
         MENU_MOUSE_POS = pygame.mouse.get_pos()
         MENU_TEXT = get_font(80).render("Tworzenie sesji", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(350, 100))
-
-        # 1) tutaj trzeba wypisać losowo wygenerowany numer sesji
-        # 2) Potem trzeba to będzie powiązać z systemem komunikatów
-        # 
-        # póki co będzie tu tylko wychodzenie z powrotem do menu gry oraz wypisywanie losowego numeru (1000,9999)
         
 
         SESJA_TEXT = get_font(60).render(f"Numer sesji: {id}", True, "#ff0505")
@@ -278,8 +251,7 @@ def utworzSesje_menu():
             button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
-        # trzeba jeszcze wypisać nr. sesji
-        # obsługa eventów pygame
+
         for event in pygame.event.get(): 
             if event.type == pygame.QUIT: 
                 pygame.quit()
@@ -310,7 +282,6 @@ def utworzSesje_menu():
 
 
 def dolaczDoSesji_menu(): 
-    # przy wysyłaniu numeru sesji trzeba będzie przekonwertować inputID na int
     pygame.display.set_caption("Menu - Dołącz do sesji")
     zmienna = True
 

@@ -3,11 +3,6 @@ from random import randint
 import json
 from rabbitmq_client import client_loop
 
-# wybranie opcji 1, gracz zaczyna rozgrywkę,
-#  generowane id sesji i wysyłane do serwera,
-#  który tworzy exchange i queue z tym id
-
-
 def graczX():
     # id jest losową liczbą z zakresu 1000-9999
     id = randint(1000, 9999)

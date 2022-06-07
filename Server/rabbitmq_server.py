@@ -23,14 +23,8 @@ def server_message(json_data, id):  # Wysyłanie wiadomości do klienta i odbier
                              exchange_type="fanout",
                              durable=True,
                              auto_delete=True)
-    """
-    result_send = channel.queue_declare(queue=q_name_send,
-                                        durable=True,
-                                        )
-    channel.queue_bind(exchange="server_message."+id,
-                       queue=q_name_send)
-    """
     # ----------------------------------------
+    
     # Wysyłanie wiadomości
     channel.basic_publish(exchange="server_message."+id,
                           routing_key="",

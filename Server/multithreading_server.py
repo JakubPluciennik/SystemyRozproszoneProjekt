@@ -12,10 +12,7 @@ def callback(ch, method, properties, body):
     id = str(sessionData['id'])
     gracz = sessionData['gracz']
 
-  
-    #if gracz == 1:  #dodawanie id do zbioru
-    #    ids.add(id)
-    #elif gracz == 2:    # jeśli gracz chce dołączyć to szukane id w zbiorze i usuwa
+    # Jeśli nie ma ID w zbiorze to dodaje go. Jeśli jest, to jest usuwany i tworzona nowa sesja
     if id in ids:
         ids.remove(id)
         t = Thread(target=gameLoop, args=[id])

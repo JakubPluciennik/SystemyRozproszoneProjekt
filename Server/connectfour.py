@@ -29,9 +29,7 @@ def wstaw_do_planszy(numer_kolumny, plansza, pomocniczaTablica, czy_gracz_jeden)
 
 def wypisz_plansze(plansza):
     planszaCon = ""
-    #print(" 0 1 2 3 4 5 6")
     planszaCon += " 0 1 2 3 4 5 6 \n"
-    # print("----------------")
     for nr_wiersza in range(6):
         linia = "|"
         for nr_kolumny in range(7):
@@ -42,11 +40,8 @@ def wypisz_plansze(plansza):
                 linia += "X|"
             else:
                 linia += "O|"
-        # print(linia)
+
         planszaCon += linia + "\n"
-        # print(linia+"|")
-    # print("----------------")
-    #print(" 0 1 2 3 4 5 6")
     planszaCon += " 0 1 2 3 4 5 6"
 
     # print(planszaCon)
@@ -141,31 +136,13 @@ def gameLoop(id):
     plansza = np.zeros((6, 7))  # inicjalizacja planszy
     pomocniczaTablica = 5*np.ones(7)  # tabel pomocnicza
 
-    # Testowanie
-    #wstaw_do_planszy(4, plansza, pomocniczaTablica, True)
-    #wstaw_do_planszy(4, plansza, pomocniczaTablica, True)
-    #wstaw_do_planszy(4, plansza, pomocniczaTablica, False)
-    #wstaw_do_planszy(4, plansza, pomocniczaTablica, True)
-    # print(plansza)
-    # wypisz_plansze(plansza)
-
     czy_gracz_jeden = True  # X
     while(True):  # Pętla gry
 
-        # Wypisanie planszy, wyświetlenie kto gra
-        """
-        print(wypisz_plansze(plansza))
-        if(czy_gracz_jeden):
-            print("\tGracza X")
-        else:
-            print("\tGracza O")
-        """
         # Wysłanie stanu gry do klienta, zwracany indeks kolumny
         planszaCon = wypisz_plansze(plansza)
         gameState = ConnectFour(czy_gracz_jeden, planszaCon, False, "", plansza.tolist())
         json_gameState = json.dumps(gameState.__dict__)
-
-        # kolumna = input()   #Wprowadzenie kolumny
 
         while True:
             try:

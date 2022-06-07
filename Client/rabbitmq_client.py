@@ -61,7 +61,6 @@ def client_loop(id, gracz):
     connection = BlockingConnection(ConnectionParameters(host,heartbeat=0))
     channel = connection.channel()
 
-    #q_name_1 = 'queue1.' + id
     q_name_2 = 'queue2.' + id
     # --- konfiguracja kanału odbierającego ---
     channel.exchange_declare(exchange="server_message." + id,

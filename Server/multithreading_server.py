@@ -13,13 +13,15 @@ def callback(ch, method, properties, body):
     gracz = sessionData['gracz']
 
   
-    if gracz == 1:  #dodawanie id do zbioru
+    #if gracz == 1:  #dodawanie id do zbioru
+    #    ids.add(id)
+    #elif gracz == 2:    # jeśli gracz chce dołączyć to szukane id w zbiorze i usuwa
+    if id in ids:
+        ids.remove(id)
+        t = Thread(target=gameLoop, args=[id])
+        t.start()
+    else: 
         ids.add(id)
-    elif gracz == 2:    # jeśli gracz chce dołączyć to szukane id w zbiorze i usuwa
-        if id in ids:
-            ids.remove(id)
-            t = Thread(target=gameLoop, args=[id])
-            t.start()
     
 
 ids = set()

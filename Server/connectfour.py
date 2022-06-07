@@ -52,9 +52,14 @@ def wypisz_plansze(plansza):
     # print(planszaCon)
     return planszaCon
 
+def sprawdz_remis(plansza):
+    if 0.0 in plansza: 
+        return False
+    return True
+
 def czy_gracz_wygral(plansza, numer_kolumny, numer_wiersza):
     result = sprawdz_kolumne(plansza, numer_kolumny) or sprawdz_wiersz(plansza, numer_wiersza) or sprawdz_skos1(
-        plansza, numer_kolumny, numer_wiersza) or sprawdz_skos2(plansza, numer_kolumny, numer_wiersza)
+        plansza, numer_kolumny, numer_wiersza) or sprawdz_skos2(plansza, numer_kolumny, numer_wiersza) or sprawdz_remis(plansza)
     return result
 
 def sprawdz_kolumne(plansza, numer_kolumny):
@@ -180,12 +185,16 @@ def gameLoop(id):
         if(czy_gracz_wygral(plansza, kolumna, numer_wiersza)):
             gameState = ConnectFour(czy_gracz_jeden, planszaCon, True, "", plansza.tolist())
             print("KONIEC GRY")
-            if(czy_gracz_jeden):
-                print("Wygrał gracz X")
-                gameState.kto_wygral = "Wygrał gracz X"
-            else:
-                print("Wygrał gracz O")
-                gameState.kto_wygral = "Wygrał gracz O"
+            if(sprawdz_remis(plansza)): 
+                gameState.kto_wygral = "Remis"
+            else: 
+                if(czy_gracz_jeden):
+                    print("Wygrał gracz X")
+                    gameState.kto_wygral = "1"
+                else:
+                    print("Wygrał gracz O")
+                    gameState.kto_wygral = "2"
+                
             json_gameState = json.dumps(gameState.__dict__)
             server_message(json_gameState, id)
             print(f"Ending session: {id}")

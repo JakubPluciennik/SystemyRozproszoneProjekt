@@ -8,11 +8,13 @@ def callback(ch, method, properties, body):
     gameState = json.loads(msg)
     # print(f"Received: {msg}")
 
+    # ten if else jest bez znaczenia w wersji graficznej gry
     if opcja == '1':
         print('Gracz X')
     elif opcja == '2':
         print('Gracz O')
 
+    # trzeba wyrysować planszę
     print(gameState['planszaCon'])
     player = '1' if gameState['gracz_1'] else '2'
 

@@ -1,3 +1,5 @@
+https://github.com/JakubPluciennik/SystemyRozproszoneProjekt
+
 Projekt na systemy rozproszone
 Stworzyliśmy grę Connect4 za pomocą RabbitMQ i pygame (pygame używane jest tylko do generowania grafiki.) 
 OPIS:

@@ -65,7 +65,7 @@ while stan:
     channel.queue_bind(exchange="main_exchange", queue=q_name)
 
     print('Witaj!')
-    print('Gra w kółko i krzyżyk')
+    print('Gra Connect4')
     print('Wpisz "1" jeśli chcesz stworzyć nową sesję')
     print('Wpisz "2" jeśli chcesz dołączyć do istniejącej sesji')
     print('Wpisz "0" jeśli chcesz zakończyć działanie programu')
